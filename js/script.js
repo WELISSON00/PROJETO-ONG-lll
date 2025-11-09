@@ -88,12 +88,13 @@
     return { init };
   })();
 
- function ensureMobileMenu() {
+function ensureMobileMenu() {
   const header = document.querySelector('.nav-wrapper');
   const nav = document.getElementById('siteNav');
-  if (!header || !nav) return;
+  const themeBtn = document.getElementById('toggleTheme');
+  if (!header || !nav || !themeBtn) return;
 
-  // Cria o botão ☰ se ainda não existir
+  // --- cria botão ☰ se não existir ---
   let btn = document.getElementById('mobileMenuToggle');
   if (!btn) {
     btn = document.createElement('button');
@@ -101,16 +102,16 @@
     btn.className = 'mobile-menu-btn';
     btn.innerHTML = '☰';
     btn.setAttribute('aria-label', 'Abrir menu');
-    header.appendChild(btn); // coloca o botão no lado direito
+    header.appendChild(btn);
   }
 
-  // Alterna menu aberto/fechado
+  // --- abre/fecha menu mobile ---
   btn.addEventListener('click', () => {
     const isOpen = nav.classList.toggle('open');
     btn.innerHTML = isOpen ? '✖' : '☰';
   });
 
-  // Fecha o menu ao clicar em um link (em mobile)
+  // --- fecha menu ao clicar em link ---
   nav.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
       if (nav.classList.contains('open')) {
@@ -120,15 +121,32 @@
     });
   });
 
-  // Fecha com tecla Esc
+  // --- fecha com tecla Esc ---
   window.addEventListener('keydown', e => {
     if (e.key === 'Escape' && nav.classList.contains('open')) {
       nav.classList.remove('open');
       btn.innerHTML = '☰';
     }
   });
-}
 
+  // --- botão de tema claro/escuro ---
+  const THEME_KEY = 'ong_avanca_theme';
+  const applyTheme = t => {
+    document.documentElement.setAttribute('data-theme', t);
+    document.body.setAttribute('data-theme', t);
+    themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
+  };
+  const toggleTheme = () => {
+    const current = localStorage.getItem(THEME_KEY) || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(THEME_KEY, next);
+    applyTheme(next);
+  };
+  themeBtn.onclick = toggleTheme;
+
+  // aplica tema salvo ao carregar
+  applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+}
 
   // open/close helpers
   const openMenu = () => {
