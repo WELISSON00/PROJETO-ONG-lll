@@ -99,7 +99,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   .site-nav.nav-open ul{display:flex}
   .field-row{flex-direction:column}
 }
-/* ================= MENU GERAL ================= */
+/* === MENU DESKTOP PADRÃO === */
 .nav-wrapper {
   display: flex;
   justify-content: space-between;
@@ -127,7 +127,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   color: var(--accent, #f39c12);
 }
 
-/* ================= BOTÃO MENU MOBILE ================= */
+/* === BOTÃO MENU MOBILE (☰) === */
 .mobile-menu-btn {
   display: none;
   background: none;
@@ -139,12 +139,17 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   z-index: 1001;
 }
 
-/* ================= RESPONSIVO (MOBILE) ================= */
+/* === MENU MOBILE === */
 @media (max-width: 768px) {
+  /* botão no canto direito */
   .mobile-menu-btn {
     display: block;
+    position: absolute;
+    top: 14px;
+    right: 18px;
   }
 
+  /* esconde o menu horizontal e cria menu lateral */
   #siteNav {
     position: fixed;
     top: 0;
@@ -154,7 +159,6 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
     background: var(--surface, #111);
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start;
     padding: 80px 20px;
     transition: right 0.3s ease;
     z-index: 1000;
@@ -174,9 +178,11 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
     color: #fff;
   }
 
+  /* opcional: esconder botão de tema à direita no mobile */
   .header-actions {
-    display: none; /* opcional: esconde o botão de tema dentro do menu */
+    display: none;
   }
 }
+
 
 
