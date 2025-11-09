@@ -101,7 +101,7 @@
     btn.className = 'mobile-menu-btn';
     btn.innerHTML = '☰';
     btn.setAttribute('aria-label', 'Abrir menu');
-    header.insertBefore(btn, header.firstChild);
+    header.appendChild(btn); // coloca o botão no lado direito
   }
 
   // Alterna menu aberto/fechado
