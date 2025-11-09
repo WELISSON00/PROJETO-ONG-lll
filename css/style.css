@@ -99,12 +99,20 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   .site-nav.nav-open ul{display:flex}
   .field-row{flex-direction:column}
 }
-/* === MENU DESKTOP PADRÃO === */
+/* === LAYOUT BASE HEADER === */
 .nav-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
+  position: relative;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--text, #fff);
+  text-decoration: none;
 }
 
 #siteNav ul {
@@ -127,45 +135,70 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   color: var(--accent, #f39c12);
 }
 
-/* === BOTÃO MENU MOBILE (☰) === */
+/* === BOTÃO DE MENU (☰) === */
 .mobile-menu-btn {
   display: none;
-  background: none;
-  border: none;
-  font-size: 30px;
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  background: var(--surface, #222);
   color: var(--text, #fff);
-  cursor: pointer;
+  border: none;
+  font-size: 28px;
   padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   z-index: 1001;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.mobile-menu-btn:hover {
+  background: var(--accent, #f39c12);
+  color: #000;
+  transform: scale(1.05);
+}
+
+/* === BOTÃO DE TEMA (🌙 / ☀️) === */
+.theme-btn {
+  background: var(--surface, #222);
+  color: var(--text, #fff);
+  border: none;
+  font-size: 22px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.theme-btn:hover {
+  background: var(--accent, #f39c12);
+  color: #000;
+  transform: scale(1.1);
 }
 
 /* === MENU MOBILE === */
 @media (max-width: 768px) {
-  /* botão no canto direito */
   .mobile-menu-btn {
     display: block;
-    position: absolute;
-    top: 14px;
-    right: 18px;
   }
 
-  /* esconde o menu horizontal e cria menu lateral */
   #siteNav {
     position: fixed;
     top: 0;
-    right: -100%;
+    left: -100%;
     height: 100vh;
     width: 70%;
     background: var(--surface, #111);
     flex-direction: column;
     align-items: flex-start;
     padding: 80px 20px;
-    transition: right 0.3s ease;
+    transition: left 0.3s ease;
     z-index: 1000;
   }
 
   #siteNav.open {
-    right: 0;
+    left: 0;
   }
 
   #siteNav ul {
@@ -176,11 +209,6 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   #siteNav a {
     font-size: 18px;
     color: #fff;
-  }
-
-  /* opcional: esconder botão de tema à direita no mobile */
-  .header-actions {
-    display: none;
   }
 }
 
