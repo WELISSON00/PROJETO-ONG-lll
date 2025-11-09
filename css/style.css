@@ -99,121 +99,77 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   .site-nav.nav-open ul{display:flex}
   .field-row{flex-direction:column}
 }
-/* ---------- NAV: Grid-aligned (logo | center menu | actions) ---------- */
-.nav-grid {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+/* === MENU PRINCIPAL (DESKTOP) === */
+.nav-wrapper {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  padding: 12px 20px;
 }
 
-/* base nav */
-.site-nav { justify-self: center; }
-.nav-list {
+#siteNav ul {
+  list-style: none;
   display: flex;
-  gap: 22px;
-  align-items: center;
+  gap: 24px;
   margin: 0;
   padding: 0;
-  list-style: none;
 }
-.nav-link, .nav-list > li > button.sub-toggle {
-  background: transparent;
-  border: none;
-  color: var(--text, #fff);
+
+#siteNav a {
   text-decoration: none;
+  color: var(--text, #fff);
   font-weight: 500;
-  cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 6px;
-}
-.nav-link:hover, .nav-list > li > button.sub-toggle:hover {
-  background: rgba(255,255,255,0.04);
 }
 
-/* sub-menu (dropdown) */
-.has-sub { position: relative; }
-.sub-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 200px;
-  background: var(--surface, #111);
-  border-radius: 8px;
-  padding: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  z-index: 1050;
+#siteNav a:hover {
+  text-decoration: underline;
 }
-.sub-menu a {
-  padding: 8px 12px;
-  display: block;
+
+/* === BOTÃO MENU MOBILE === */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
   color: var(--text, #fff);
-  text-decoration: none;
-  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 8px;
+  z-index: 1001;
 }
-.sub-menu a:hover { background: rgba(255,255,255,0.04); }
 
-/* header actions (right) */
-.header-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.theme-btn { background: none; border: none; cursor: pointer; font-size: 20px; }
-.cta-btn { display: inline-block; text-decoration: none; padding: 8px 12px; border-radius: 8px; }
-
-/* ---------- MOBILE ---------- */
-@media (max-width: 900px) {
-  .nav-grid {
-    grid-template-columns: auto auto; /* logo + actions row (menu icon handled separately) */
+/* === LAYOUT MOBILE === */
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
   }
 
-  /* coloca nav em painel oculto */
-  .site-nav {
+  #siteNav {
     position: fixed;
     top: 0;
-    right: 0;
+    right: -100%;
     height: 100vh;
-    width: 0;
-    overflow: hidden;
-    background: var(--surface, #0f0f0f);
-    transition: width 0.28s ease;
-    z-index: 1060;
-    padding-top: 72px; /* deixa espaço pro topo */
-  }
-  .site-nav.open { width: 280px; }
-
-  .nav-list {
-    flex-direction: column;
-    gap: 14px;
-    padding: 16px;
-  }
-
-  /* colocar botão hamburger (criado via JS) */
-  .mobile-menu-btn {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    z-index: 1100;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 46px;
-    height: 46px;
-    border-radius: 10px;
-    border: none;
+    width: 70%;
     background: var(--surface, #111);
-    color: var(--text, #fff);
-    font-size: 22px;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px 20px;
+    gap: 20px;
+    transition: right 0.3s ease;
   }
 
-  .header-actions .cta-btn { display: none; } /* esconde CTA à direita para mobile (opcional) */
+  #siteNav.open {
+    right: 0;
+  }
+
+  #siteNav ul {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  #siteNav a {
+    font-size: 18px;
+    color: #fff;
+  }
 }
 
-/* pequena melhoria visual para links ativos */
-.nav-link.active { box-shadow: inset 0 -3px 0 var(--accent, #f39c12); }
 
