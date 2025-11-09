@@ -89,40 +89,46 @@
   })();
 
  function ensureMobileMenu() {
+  const header = document.querySelector('.nav-wrapper');
   const nav = document.getElementById('siteNav');
-  const headerWrap = document.querySelector('.nav-wrapper');
-  if (!nav || !headerWrap) return;
+  if (!header || !nav) return;
 
-  // cria botão hamburger se não existir
+  // Cria o botão ☰ se ainda não existir
   let btn = document.getElementById('mobileMenuToggle');
   if (!btn) {
     btn = document.createElement('button');
     btn.id = 'mobileMenuToggle';
     btn.className = 'mobile-menu-btn';
-    btn.type = 'button';
-    btn.setAttribute('aria-label', 'Abrir menu');
-    btn.setAttribute('aria-expanded', 'false');
     btn.innerHTML = '☰';
-    document.body.appendChild(btn);
+    btn.setAttribute('aria-label', 'Abrir menu');
+    header.insertBefore(btn, header.firstChild);
   }
 
-  // create submenu toggles (so they work on touch)
-  document.querySelectorAll('.has-sub > .sub-toggle').forEach(toggle => {
-    // ensure accessible attributes
-    const subId = toggle.getAttribute('aria-controls');
-    const sub = document.getElementById(subId);
-    if (!sub) return;
+  // Alterna menu aberto/fechado
+  btn.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('open');
+    btn.innerHTML = isOpen ? '✖' : '☰';
+  });
 
-    toggle.addEventListener('click', (e) => {
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      if (expanded) {
-        sub.hidden = true;
-      } else {
-        sub.hidden = false;
+  // Fecha o menu ao clicar em um link (em mobile)
+  nav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      if (nav.classList.contains('open')) {
+        nav.classList.remove('open');
+        btn.innerHTML = '☰';
       }
     });
   });
+
+  // Fecha com tecla Esc
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+      btn.innerHTML = '☰';
+    }
+  });
+}
+
 
   // open/close helpers
   const openMenu = () => {
@@ -295,82 +301,3 @@
     history.replaceState({ url: location.pathname }, '', location.pathname);
   });
 })();
-/* ================= MENU GERAL ================= */
-.nav-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-}
-
-#siteNav ul {
-  list-style: none;
-  display: flex;
-  gap: 24px;
-  margin: 0;
-  padding: 0;
-}
-
-#siteNav a {
-  text-decoration: none;
-  color: var(--text, #fff);
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-#siteNav a:hover,
-#siteNav a.active {
-  color: var(--accent, #f39c12);
-}
-
-/* ================= BOTÃO MENU MOBILE ================= */
-.mobile-menu-btn {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 30px;
-  color: var(--text, #fff);
-  cursor: pointer;
-  padding: 6px 10px;
-  z-index: 1001;
-}
-
-/* ================= RESPONSIVO (MOBILE) ================= */
-@media (max-width: 768px) {
-  .mobile-menu-btn {
-    display: block;
-  }
-
-  #siteNav {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    height: 100vh;
-    width: 70%;
-    background: var(--surface, #111);
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 80px 20px;
-    transition: right 0.3s ease;
-    z-index: 1000;
-  }
-
-  #siteNav.open {
-    right: 0;
-  }
-
-  #siteNav ul {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  #siteNav a {
-    font-size: 18px;
-    color: #fff;
-  }
-
-  .header-actions {
-    display: none; /* opcional: esconde o botão de tema dentro do menu */
-  }
-}
