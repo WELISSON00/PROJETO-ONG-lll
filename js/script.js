@@ -88,41 +88,65 @@
     return { init };
   })();
 
-  // --- MENU MOBILE corrigido (compatível com <ul><li><a>) -------------------
-  function ensureMobileMenu() {
-    if (!document.getElementById('mobileMenuToggle')) {
-      const header = document.querySelector('.nav-wrapper');
-      if (!header) return;
+ // === ensureMobileMenu (versão robusta) ===
+function ensureMobileMenu() {
+  // se já existe, só garante listeners
+  let btn = document.getElementById('mobileMenuToggle');
+  const nav = document.getElementById('siteNav');
+  const headerWrap = document.querySelector('.nav-wrapper');
 
-      const btn = document.createElement('button');
-      btn.id = 'mobileMenuToggle';
-      btn.className = 'mobile-menu-btn';
-      btn.setAttribute('aria-label', 'Abrir menu');
-      btn.innerHTML = '☰';
-      header.insertBefore(btn, header.firstChild);
+  if (!nav || !headerWrap) return;
 
-      const nav = document.getElementById('siteNav');
-
-      // Abre/fecha o menu ao clicar no botão
-      btn.addEventListener('click', () => {
-        if (!nav) return;
-        nav.classList.toggle('open');
-        btn.classList.toggle('open');
-        btn.innerHTML = btn.classList.contains('open') ? '✖' : '☰';
-      });
-
-      // Fecha o menu ao clicar em um link dentro de <ul>
-      document.body.addEventListener('click', e => {
-        if (!nav) return;
-        const link = e.target.closest('a');
-        if (link && nav.contains(link)) {
-          nav.classList.remove('open');
-          btn.classList.remove('open');
-          btn.innerHTML = '☰';
-        }
-      });
-    }
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'mobileMenuToggle';
+    btn.className = 'mobile-menu-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Abrir menu');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = '☰';
+    document.body.appendChild(btn); // usa body para evitar overflow/clip do header
   }
+
+  // toggles: adiciona/ remove classe .open no nav e body.lock
+  const openMenu = () => {
+    nav.classList.add('open');
+    btn.classList.add('open');
+    btn.innerHTML = '✖';
+    btn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('menu-open');
+  };
+
+  const closeMenu = () => {
+    nav.classList.remove('open');
+    btn.classList.remove('open');
+    btn.innerHTML = '☰';
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('menu-open');
+  };
+
+  btn.removeEventListener('click', btn._menuClickHandler);
+  btn._menuClickHandler = () => (nav.classList.contains('open') ? closeMenu() : openMenu());
+  btn.addEventListener('click', btn._menuClickHandler);
+
+  // Fecha quando clica em um link dentro do nav (interna ao painel)
+  document.body.removeEventListener('click', document.body._menuLinkHandler);
+  document.body._menuLinkHandler = (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    // se link pertence ao siteNav, fecha o menu (mas mantém comportamento do SPA)
+    if (nav.contains(link)) closeMenu();
+  };
+  document.body.addEventListener('click', document.body._menuLinkHandler);
+
+  // Fecha com ESC
+  window.removeEventListener('keydown', window._menuEscHandler);
+  window._menuEscHandler = (e) => {
+    if (e.key === 'Escape' && nav.classList.contains('open')) closeMenu();
+  };
+  window.addEventListener('keydown', window._menuEscHandler);
+}
+
 
   // --- Toast simples ---------------------------------------------------------
   function showToast(msg, timeout = 3000) {
