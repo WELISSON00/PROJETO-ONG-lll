@@ -99,3 +99,51 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   .site-nav.nav-open ul{display:flex}
   .field-row{flex-direction:column}
 }
+/* === MENU MOBILE === */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text, #fff);
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+/* layout base */
+#siteNav {
+  display: flex;
+  gap: 20px;
+}
+
+/* comportamento responsivo */
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  #siteNav {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 220px;
+    background: var(--surface, #222);
+    flex-direction: column;
+    padding: 20px;
+    display: none;
+  }
+
+  #siteNav.open {
+    display: flex;
+  }
+
+  #siteNav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #siteNav a {
+    color: var(--text, #fff);
+    text-decoration: none;
+  }
+}
