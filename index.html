@@ -8,21 +8,34 @@
 </head>
 <body data-theme="dark">
   <header class="site-header">
-    <div class="container nav-wrapper">
-      <a class="logo" href="index.html">ONG AVANÇA<span class="accent">.</span></a>
-      <nav id="siteNav" class="site-nav" role="navigation">
-        <ul>
-          <li><a href="index.html" class="active">Início</a></li>
-          <li><a href="projetos.html">Projetos</a></li>
-          <li><a href="cadastro.html">Cadastro</a></li>
-          
-        </ul>
-      </nav>
-      <div class="header-actions">
-        <button id="toggleTheme" class="theme-btn" aria-label="Alternar tema">☀️</button>
-      </div>
+  <div class="container nav-wrapper nav-grid">
+    <a class="logo" href="index.html">ONG AVANÇA<span class="accent">.</span></a>
+
+    <!-- Navegação principal: links centralizados -->
+    <nav id="siteNav" class="site-nav" role="navigation" aria-label="Menu principal">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link active">Início</a></li>
+        <li class="has-sub">
+          <button class="sub-toggle" aria-expanded="false" aria-controls="sub-projetos">Projetos ▾</button>
+          <ul id="sub-projetos" class="sub-menu" hidden>
+            <li><a href="projetos.html">Todos os projetos</a></li>
+            <li><a href="projetos.html#destaque">Destaques</a></li>
+          </ul>
+        </li>
+        <li><a href="cadastro.html" class="nav-link">Cadastro</a></li>
+        <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+        <li><a href="contato.html" class="nav-link">Contato</a></li>
+      </ul>
+    </nav>
+
+    <!-- Ações à direita -->
+    <div class="header-actions">
+      <button id="toggleTheme" class="theme-btn" aria-label="Alternar tema">☀️</button>
+      <a class="btn btn-primary cta-btn" href="cadastro.html">Quero Ajudar</a>
     </div>
-  </header>
+  </div>
+</header>
+
 
   <main>
     <section class="hero">
