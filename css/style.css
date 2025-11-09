@@ -99,7 +99,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   .site-nav.nav-open ul{display:flex}
   .field-row{flex-direction:column}
 }
-/* === MENU PRINCIPAL (DESKTOP) === */
+/* ================= MENU GERAL ================= */
 .nav-wrapper {
   display: flex;
   justify-content: space-between;
@@ -119,25 +119,27 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
   text-decoration: none;
   color: var(--text, #fff);
   font-weight: 500;
+  transition: color 0.2s;
 }
 
-#siteNav a:hover {
-  text-decoration: underline;
+#siteNav a:hover,
+#siteNav a.active {
+  color: var(--accent, #f39c12);
 }
 
-/* === BOTÃO MENU MOBILE === */
+/* ================= BOTÃO MENU MOBILE ================= */
 .mobile-menu-btn {
   display: none;
   background: none;
   border: none;
-  font-size: 28px;
+  font-size: 30px;
   color: var(--text, #fff);
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 6px 10px;
   z-index: 1001;
 }
 
-/* === LAYOUT MOBILE === */
+/* ================= RESPONSIVO (MOBILE) ================= */
 @media (max-width: 768px) {
   .mobile-menu-btn {
     display: block;
@@ -152,9 +154,10 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
     background: var(--surface, #111);
     flex-direction: column;
     align-items: flex-start;
+    justify-content: flex-start;
     padding: 80px 20px;
-    gap: 20px;
     transition: right 0.3s ease;
+    z-index: 1000;
   }
 
   #siteNav.open {
@@ -163,12 +166,16 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
 
   #siteNav ul {
     flex-direction: column;
-    gap: 18px;
+    gap: 20px;
   }
 
   #siteNav a {
     font-size: 18px;
     color: #fff;
+  }
+
+  .header-actions {
+    display: none; /* opcional: esconde o botão de tema dentro do menu */
   }
 }
 
