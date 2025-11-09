@@ -88,15 +88,13 @@
     return { init };
   })();
 
- // === ensureMobileMenu (versão robusta) ===
-function ensureMobileMenu() {
-  // se já existe, só garante listeners
-  let btn = document.getElementById('mobileMenuToggle');
+ function ensureMobileMenu() {
   const nav = document.getElementById('siteNav');
   const headerWrap = document.querySelector('.nav-wrapper');
-
   if (!nav || !headerWrap) return;
 
+  // cria botão hamburger se não existir
+  let btn = document.getElementById('mobileMenuToggle');
   if (!btn) {
     btn = document.createElement('button');
     btn.id = 'mobileMenuToggle';
@@ -105,10 +103,28 @@ function ensureMobileMenu() {
     btn.setAttribute('aria-label', 'Abrir menu');
     btn.setAttribute('aria-expanded', 'false');
     btn.innerHTML = '☰';
-    document.body.appendChild(btn); // usa body para evitar overflow/clip do header
+    document.body.appendChild(btn);
   }
 
-  // toggles: adiciona/ remove classe .open no nav e body.lock
+  // create submenu toggles (so they work on touch)
+  document.querySelectorAll('.has-sub > .sub-toggle').forEach(toggle => {
+    // ensure accessible attributes
+    const subId = toggle.getAttribute('aria-controls');
+    const sub = document.getElementById(subId);
+    if (!sub) return;
+
+    toggle.addEventListener('click', (e) => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      if (expanded) {
+        sub.hidden = true;
+      } else {
+        sub.hidden = false;
+      }
+    });
+  });
+
+  // open/close helpers
   const openMenu = () => {
     nav.classList.add('open');
     btn.classList.add('open');
@@ -116,35 +132,52 @@ function ensureMobileMenu() {
     btn.setAttribute('aria-expanded', 'true');
     document.body.classList.add('menu-open');
   };
-
   const closeMenu = () => {
     nav.classList.remove('open');
     btn.classList.remove('open');
     btn.innerHTML = '☰';
     btn.setAttribute('aria-expanded', 'false');
     document.body.classList.remove('menu-open');
+
+    // fechar submenus
+    document.querySelectorAll('.has-sub > .sub-toggle').forEach(t => {
+      t.setAttribute('aria-expanded', 'false');
+      const id = t.getAttribute('aria-controls');
+      const sub = document.getElementById(id);
+      if (sub) sub.hidden = true;
+    });
   };
 
-  btn.removeEventListener('click', btn._menuClickHandler);
-  btn._menuClickHandler = () => (nav.classList.contains('open') ? closeMenu() : openMenu());
-  btn.addEventListener('click', btn._menuClickHandler);
+  // click handler on burger
+  btn.removeEventListener('click', btn._handler);
+  btn._handler = () => (nav.classList.contains('open') ? closeMenu() : openMenu());
+  btn.addEventListener('click', btn._handler);
 
-  // Fecha quando clica em um link dentro do nav (interna ao painel)
-  document.body.removeEventListener('click', document.body._menuLinkHandler);
-  document.body._menuLinkHandler = (e) => {
-    const link = e.target.closest('a');
-    if (!link) return;
-    // se link pertence ao siteNav, fecha o menu (mas mantém comportamento do SPA)
-    if (nav.contains(link)) closeMenu();
+  // close when clicking a nav link (preserves SPA intercept)
+  document.body.removeEventListener('click', document.body._navClickHandler);
+  document.body._navClickHandler = (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    if (nav.contains(a)) {
+      // if link has a hash only (in-page) let it, otherwise close menu
+      closeMenu();
+    }
   };
-  document.body.addEventListener('click', document.body._menuLinkHandler);
+  document.body.addEventListener('click', document.body._navClickHandler);
 
-  // Fecha com ESC
+  // close on ESC
   window.removeEventListener('keydown', window._menuEscHandler);
   window._menuEscHandler = (e) => {
     if (e.key === 'Escape' && nav.classList.contains('open')) closeMenu();
   };
   window.addEventListener('keydown', window._menuEscHandler);
+
+  // ensure initial state
+  document.querySelectorAll('.has-sub > .sub-toggle').forEach(t => {
+    const sid = t.getAttribute('aria-controls');
+    const sub = document.getElementById(sid);
+    if (sub) sub.hidden = true;
+  });
 }
 
 
