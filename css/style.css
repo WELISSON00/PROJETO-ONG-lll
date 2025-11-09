@@ -179,3 +179,84 @@ input:focus,select:focus,textarea:focus{box-shadow:0 8px 30px rgba(140,60,255,0.
     overflow: hidden;
   }
 }
+/* === MOBILE MENU - FORÇA VISUAL E COMPORTAMENTO === */
+/* botão fixo e visível no canto superior direito em mobile */
+.mobile-menu-btn {
+  display: none; /* ativado apenas em @media abaixo */
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 1100;
+  background: var(--surface, #222);
+  color: var(--text, #fff);
+  border: none;
+  padding: 8px 10px;
+  font-size: 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* layout desktop padrão */
+#siteNav {
+  display: flex;
+  gap: 20px;
+}
+
+/* mobile behaviour */
+@media (max-width: 900px) {
+  .mobile-menu-btn { display: block; }
+
+  /* esconde nav padrão e cria painel deslizable */
+  #siteNav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 0;
+    overflow: hidden;
+    background: var(--surface, #111);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 70px 16px 16px 16px;
+    gap: 18px;
+    transition: width 0.28s ease, opacity 0.28s ease;
+    opacity: 0;
+    z-index: 1050;
+  }
+
+  /* nav aberto: largura e visibilidade */
+  #siteNav.open {
+    width: 260px;
+    opacity: 1;
+  }
+
+  /* lista interna */
+  #siteNav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  #siteNav a {
+    color: var(--text, #fff);
+    text-decoration: none;
+    font-size: 18px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+
+  /* opcional: destaque link ativo */
+  #siteNav a.active {
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* bloqueia scroll quando menu aberto */
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
