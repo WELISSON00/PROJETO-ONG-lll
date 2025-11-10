@@ -6,85 +6,163 @@
   <title>ONG AVANÇA - Início</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body data-theme="dark">
+
+<!-- HEADER -->
 <header class="site-header">
   <div class="container nav-wrapper">
+
+    <!-- Logo -->
     <a class="logo" href="index.html">ONG AVANÇA<span class="accent">.</span></a>
-    <nav id="siteNav" class="site-nav" role="navigation">
+
+    <!-- Botão mobile -->
+    <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
+
+    <!-- Navegação -->
+    <nav id="siteNav" class="site-nav">
       <ul>
         <li><a href="index.html" class="active">Início</a></li>
         <li><a href="projetos.html">Projetos</a></li>
         <li><a href="cadastro.html">Cadastro</a></li>
       </ul>
     </nav>
+
+    <!-- Botão tema -->
     <div class="header-actions">
       <button id="toggleTheme" class="theme-btn" aria-label="Alternar tema">🌙</button>
     </div>
+
   </div>
 </header>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-inner">
-        <div class="hero-text">
-          <h1>Avançando juntos. <span>transformando vidas.</span></h1>
-          <p class="lead">Projetos sociais, doações e voluntariado — criamos oportunidades onde mais precisa.</p>
-          <div class="hero-ctas">
-            <a class="btn btn-primary" href="cadastro.html">Quero Ajudar</a>
-            <a class="btn btn-outline" href="projetos.html">Ver Projetos</a>
-          </div>
-          <div style="margin-top:18px" id="recent-cards"></div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<main>
+  <section class="hero">
+    <div class="container hero-inner">
+
+      <!-- Texto -->
+      <div class="hero-text">
+        <h1>Avançando juntos. <span>transformando vidas.</span></h1>
+        <p class="lead">
+          Projetos sociais, doações e voluntariado — criamos oportunidades onde mais precisa.
+        </p>
+
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="cadastro.html">Quero Ajudar</a>
+          <a class="btn btn-outline" href="projetos.html">Ver Projetos</a>
         </div>
-        <div class="hero-card">
-          <img src="img/people-show.jpg" alt="Voluntários em ação" />
-          <div class="stat-row">
-            <div class="stat"><strong>+500</strong><span>Voluntários</span></div>
-            <div class="stat"><strong>+5.500</strong><span>Atendimentos</span></div>
+
+        <div style="margin-top:18px" id="recent-cards"></div>
+      </div>
+
+      <!-- Card da direita -->
+      <div class="hero-card">
+        <img src="img/people-show.jpg" alt="Voluntários em ação" />
+        <div class="stat-row">
+          <div class="stat">
+            <strong>+500</strong>
+            <span>Voluntários</span>
+          </div>
+          <div class="stat">
+            <strong>+5.500</strong>
+            <span>Atendimentos</span>
           </div>
         </div>
       </div>
-    </section>
 
-    <section class="features container">
-      <div class="feature-card"><h3>Educação</h3><p>Apoio pedagógico e cursos profissionalizantes.</p></div>
-      <div class="feature-card"><h3>Alimentação</h3><p>Distribuição de cestas e refeições semanais.</p></div>
-      <div class="feature-card"><h3>Saúde</h3><p>Atendimentos gratuitos em comunidades.</p></div>
-    </section>
-
-    <section class="highlight container">
-      <div class="highlight-left">
-        <h2>Projetos em Destaque</h2>
-        <p>Conheça alguns projetos que estão mudando vidas agora mesmo.</p>
-        <a class="btn btn-primary" href="projetos.html">Ver Todos</a>
-      </div>
-      <div class="highlight-right projects-preview">
-        <article class="preview-card"><img src="img/library.jpg" alt=""><h4>Educação Solidária</h4></article>
-        <article class="preview-card"><img src="img/january-2020.jpg" alt=""><h4>Alimentando Esperanças</h4></article>
-        <article class="preview-card"><img src="img/injecting-heart.jpg" alt=""><h4>Saúde para Todos</h4></article>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div><h4>ONG AVANÇA</h4><p>Av. Guapira, 59 — Centro, São Paulo — SP<br>CEP 01001-000</p></div>
-      <div><h4>Contato</h4><p>contato@ongavanca.org<br>(11) 1234-5678</p></div>
-      <div><h4>Siga</h4><p><a href="#">Instagram</a> • <a href="#">Facebook</a></p></div>
     </div>
-    <div class="footer-bottom"><small>© 2025 ONG AVANÇA — Todos os direitos reservados.</small></div>
-  </footer>
+  </section>
 
-  <script src="js/script.js"></script>
-  <script>
-    // render recent cards on index
-    (function(){
-      const projects = [
-        {title:'Educação Solidária', desc:'Apoio pedagógico e cursos profissionalizantes'},
-        {title:'Alimentando Esperanças', desc:'Distribuição de cestas básicas e refeições semanais'}
-      ];
-      const recent = document.getElementById('recent-cards');
-      if(recent) recent.innerHTML = projects.map(p=>`<div class="panel-card"><h4>${p.title}</h4><small>${p.desc}</small></div>`).join('');
-    })();
-  </script>
+  <section class="features container">
+    <div class="feature-card">
+      <h3>Educação</h3>
+      <p>Apoio pedagógico e cursos profissionalizantes.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Alimentação</h3>
+      <p>Distribuição de cestas e refeições semanais.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Saúde</h3>
+      <p>Atendimentos gratuitos em comunidades.</p>
+    </div>
+  </section>
+
+  <section class="highlight container">
+    <div class="highlight-left">
+      <h2>Projetos em Destaque</h2>
+      <p>Conheça alguns projetos que estão mudando vidas agora mesmo.</p>
+      <a class="btn btn-primary" href="projetos.html">Ver Todos</a>
+    </div>
+
+    <div class="highlight-right projects-preview">
+      <article class="preview-card">
+        <img src="img/library.jpg" alt="">
+        <h4>Educação Solidária</h4>
+      </article>
+
+      <article class="preview-card">
+        <img src="img/january-2020.jpg" alt="">
+        <h4>Alimentando Esperanças</h4>
+      </article>
+
+      <article class="preview-card">
+        <img src="img/injecting-heart.jpg" alt="">
+        <h4>Saúde para Todos</h4>
+      </article>
+    </div>
+  </section>
+</main>
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+
+    <div>
+      <h4>ONG AVANÇA</h4>
+      <p>Av. Guapira, 59 — Centro, São Paulo — SP<br>CEP 01001-000</p>
+    </div>
+
+    <div>
+      <h4>Contato</h4>
+      <p>contato@ongavanca.org<br>(11) 1234-5678</p>
+    </div>
+
+    <div>
+      <h4>Siga</h4>
+      <p><a href="#">Instagram</a> • <a href="#">Facebook</a></p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <small>© 2025 ONG AVANÇA — Todos os direitos reservados.</small>
+  </div>
+</footer>
+
+
+<!-- SCRIPTS -->
+<script src="js/script.js"></script>
+
+<script>
+// Render cards recentes dinamicamente
+(function(){
+  const projects = [
+    {title:'Educação Solidária', desc:'Apoio pedagógico e cursos profissionalizantes'},
+    {title:'Alimentando Esperanças', desc:'Distribuição de cestas básicas e refeições semanais'}
+  ];
+
+  const recent = document.getElementById('recent-cards');
+  if (recent) {
+    recent.innerHTML = projects.map(
+      p => `<div class="panel-card"><h4>${p.title}</h4><small>${p.desc}</small></div>`
+    ).join('');
+  }
+})();
+</script>
+
 </body>
 </html>
