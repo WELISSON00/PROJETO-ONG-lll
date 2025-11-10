@@ -6,37 +6,117 @@
   <title>ONG AVANÇA - Projetos</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body data-theme="dark">
-  <header class="site-header">
-    <div class="container nav-wrapper">
-      <a class="logo" href="index.html">ONG AVANÇA<span class="accent">.</span></a>
-      <nav id="siteNav" class="site-nav" role="navigation">
-        <ul>
-          <li><a href="index.html">Início</a></li>
-          <li><a href="projetos.html" class="active">Projetos</a></li>
-          <li><a href="cadastro.html">Cadastro</a></li>
-          
-        </ul>
-      </nav>
-      <div class="header-actions"><button id="toggleTheme" class="theme-btn">☀️</button></div>
+
+<header class="site-header">
+  <div class="container nav-wrapper">
+
+    <a class="logo" href="index.html">ONG AVANÇA<span class="accent">.</span></a>
+
+    <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
+
+    <nav id="siteNav" class="site-nav" role="navigation">
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="projetos.html" class="active">Projetos</a></li>
+        <li><a href="cadastro.html">Cadastro</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button id="toggleTheme" class="theme-btn" aria-label="Alternar tema">🌙</button>
     </div>
-  </header>
 
-  <main class="container projects-section">
-    <h1>Projetos Sociais</h1>
-    <p class="lead">Abaixo estão projetos atuais que você pode apoiar ou participar como voluntário.</p>
-    <div class="projects-grid" id="projects-grid"></div>
-  </main>
+  </div>
+</header>
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div><h4>ONG AVANÇA</h4><p>Av. Guapira, 59 — Centro, São Paulo — SP<br>CEP 01001-000</p></div>
-      <div><h4>Contato</h4><p>contato@ongavanca.org<br>(11) 1234-5678</p></div>
-      <div><h4>Siga</h4><p><a href="#">Instagram</a> • <a href="#">Facebook</a></p></div>
+<main class="container projects-section">
+  <h1>Projetos Sociais</h1>
+
+  <p class="lead">
+    Abaixo estão projetos atuais que você pode apoiar ou participar como voluntário.
+  </p>
+
+  <!-- GRID preenchido via JavaScript -->
+  <div class="projects-grid" id="projects-grid"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+
+    <div>
+      <h4>ONG AVANÇA</h4>
+      <p>Av. Guapira, 59 — Centro, São Paulo — SP<br>CEP 01001-000</p>
     </div>
-  <div class="footer-bottom"><small>© 2025 ONG AVANÇA — Todos os direitos reservados.</small></div>
-  </footer>
 
-  <script src="js/script.js"></script>
+    <div>
+      <h4>Contato</h4>
+      <p>contato@ongavanca.org<br>(11) 1234-5678</p>
+    </div>
+
+    <div>
+      <h4>Siga</h4>
+      <p><a href="#">Instagram</a> • <a href="#">Facebook</a></p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <small>© 2025 ONG AVANÇA — Todos os direitos reservados.</small>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+
+<!-- ==== SCRIPT EXCLUSIVO DOS PROJETOS ==== -->
+<script>
+const projetos = [
+  {
+    titulo: "Educação Solidária",
+    desc: "Apoio pedagógico e cursos profissionalizantes.",
+    img: "img/library.jpg"
+  },
+  {
+    titulo: "Alimentando Esperanças",
+    desc: "Entrega de cestas básicas e refeições semanais.",
+    img: "img/january-2020.jpg"
+  },
+  {
+    titulo: "Saúde Para Todos",
+    desc: "Atendimentos médicos gratuitos em comunidades.",
+    img: "img/injecting-heart.jpg"
+  },
+  {
+    titulo: "Esporte e Vida",
+    desc: "Atividades esportivas para crianças e adolescentes.",
+    img: "img/9063.jpg"
+  },
+  {
+    titulo: "Arte na Comunidade",
+    desc: "Pintura, música e teatro para jovens talentos.",
+    img: "img/122902.jpg"
+  }
+];
+
+function renderProjetos() {
+  const grid = document.getElementById("projects-grid");
+  if (!grid) return;
+
+  grid.innerHTML = projetos.map(p => `
+    <article class="project-card">
+      <img src="${p.img}" alt="${p.titulo}">
+      <div class="card-body">
+        <h3>${p.titulo}</h3>
+        <p>${p.desc}</p>
+      </div>
+    </article>
+  `).join("");
+}
+
+document.addEventListener("DOMContentLoaded", renderProjetos);
+</script>
+
 </body>
 </html>
+
