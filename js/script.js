@@ -1,321 +1,92 @@
-(() => {
-  'use strict';
+/* js/script.js – Menu + Tema (compatível com SPA) */
+(function () {
+  "use strict";
 
-  // --- Utilitários DOM -------------------------------------------------------
-  const $ = sel => document.querySelector(sel);
-  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const qs = (id) => document.getElementById(id);
 
-  // --- Template engine simples ----------------------------------------------
-  function renderTemplate(tpl, data = {}) {
-    return tpl.replace(/{{\\s*([\\w.]+)\\s*}}/g, (_, key) => {
-      const parts = key.split('.');
-      let v = data;
-      for (const p of parts) {
-        if (v == null) return '';
-        v = v[p];
-      }
-      return v ?? '';
+  // Reinicializa sempre que o header existir (SPA pode recriar)
+  function initMenu() {
+    const menuBtn = qs("menuToggle");
+    const siteNav = qs("siteNav");
+    if (!menuBtn || !siteNav) return;
+
+    // Para evitar duplicar eventos em SPA
+    menuBtn.replaceWith(menuBtn.cloneNode(true));
+    siteNav.replaceWith(siteNav.cloneNode(true));
+
+    const btn = qs("menuToggle");
+    const nav = qs("siteNav");
+
+    function openNav() {
+      nav.classList.add("open");
+      btn.classList.add("is-open");
+      btn.setAttribute("aria-expanded", "true");
+    }
+
+    function closeNav() {
+      nav.classList.remove("open");
+      btn.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleNav() {
+      nav.classList.contains("open") ? closeNav() : openNav();
+    }
+
+    // Clique no botão
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleNav();
+    });
+
+    // Clicou em link dentro do menu → fechar
+    nav.addEventListener("click", (e) => {
+      if (e.target.closest("a")) closeNav();
+    });
+
+    // Clicou fora → fecha
+    document.addEventListener("click", (e) => {
+      if (!nav.contains(e.target) && !btn.contains(e.target)) closeNav();
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 768) closeNav();
     });
   }
 
-  // --- SPA Router ------------------------------------------------------------
-  const router = (() => {
-    async function load(url, addToHistory = true) {
-      try {
-        const res = await fetch(url, { cache: 'no-cache' });
-        if (!res.ok) throw new Error('Erro ao carregar ' + url);
-        const text = await res.text();
-        const doc = new DOMParser().parseFromString(text, 'text/html');
-        const newMain = doc.querySelector('main');
-        if (!newMain) throw new Error('Página sem <main>');
-        const main = document.querySelector('main');
-        main.replaceWith(newMain);
-        if (addToHistory) history.pushState({ url }, '', url);
-        initHooks();
-      } catch (err) {
-        console.error(err);
-        showToast('Erro ao carregar a página.');
-      }
-    }
+  function initTheme() {
+    const themeBtn = qs("toggleTheme");
+    if (!themeBtn) return;
 
-    function interceptLinks() {
-      document.body.addEventListener('click', e => {
-        const a = e.target.closest('a');
-        if (!a) return;
-        const href = a.getAttribute('href');
-        if (!href || href.startsWith('http') || href.startsWith('#') || a.target === '_blank')
-          return;
-        e.preventDefault();
-        load(href);
-      });
+    const html = document.documentElement;
 
-      window.addEventListener('popstate', e => {
-        const state = e.state;
-        if (state && state.url) load(state.url, false);
-        else load(location.pathname, false);
-      });
-    }
+    const saved = localStorage.getItem("theme");
+    const startTheme = saved || "dark";
 
-    return { load, interceptLinks };
-  })();
+    html.dataset.theme = startTheme;
+    themeBtn.textContent = startTheme === "dark" ? "☀️" : "🌙";
 
-  // --- Tema claro/escuro -----------------------------------------------------
-  const theme = (() => {
-    const key = 'ong_avanca_theme';
-    const get = () => localStorage.getItem(key) || 'dark';
-    const apply = t => {
-      document.documentElement.setAttribute('data-theme', t);
-      document.body.setAttribute('data-theme', t);
+    themeBtn.onclick = () => {
+      const current = html.dataset.theme;
+      const next = current === "light" ? "dark" : "light";
+      html.dataset.theme = next;
+      localStorage.setItem("theme", next);
+      themeBtn.textContent = next === "dark" ? "☀️" : "🌙";
     };
-    const set = t => {
-      localStorage.setItem(key, t);
-      apply(t);
-      updateBtn();
-    };
-    const toggle = () => set(get() === 'dark' ? 'light' : 'dark');
-    const updateBtn = () => {
-      $$('#toggleTheme').forEach(btn => {
-        btn.textContent = get() === 'dark' ? '☀️' : '🌙';
-      });
-    };
-    const init = () => {
-      apply(get());
-      updateBtn();
-      document.addEventListener('click', e => {
-        if (e.target && e.target.id === 'toggleTheme') toggle();
-      });
-    };
-    return { init };
-  })();
-
-function ensureMobileMenu() {
-  const header = document.querySelector('.nav-wrapper');
-  const nav = document.getElementById('siteNav');
-  const themeBtn = document.getElementById('toggleTheme');
-  if (!header || !nav || !themeBtn) return;
-
-  // --- cria botão ☰ se não existir ---
-  let btn = document.getElementById('mobileMenuToggle');
-  if (!btn) {
-    btn = document.createElement('button');
-    btn.id = 'mobileMenuToggle';
-    btn.className = 'mobile-menu-btn';
-    btn.innerHTML = '☰';
-    btn.setAttribute('aria-label', 'Abrir menu');
-    header.appendChild(btn);
   }
 
-  // --- abre/fecha menu mobile ---
-  btn.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('open');
-    btn.innerHTML = isOpen ? '✖' : '☰';
+  // Primeira inicialização
+  document.addEventListener("DOMContentLoaded", () => {
+    initMenu();
+    initTheme();
   });
 
-  // --- fecha menu ao clicar em link ---
-  nav.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      if (nav.classList.contains('open')) {
-        nav.classList.remove('open');
-        btn.innerHTML = '☰';
-      }
-    });
+  // SPA recarrega conteúdo, então reinicializa elementos sempre
+  document.addEventListener("spa-navigate", () => {
+    setTimeout(() => {
+      initMenu();
+      initTheme();
+    }, 10);
   });
 
-  // --- fecha com tecla Esc ---
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && nav.classList.contains('open')) {
-      nav.classList.remove('open');
-      btn.innerHTML = '☰';
-    }
-  });
-
-  // --- botão de tema claro/escuro ---
-  const THEME_KEY = 'ong_avanca_theme';
-  const applyTheme = t => {
-    document.documentElement.setAttribute('data-theme', t);
-    document.body.setAttribute('data-theme', t);
-    themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
-  };
-  const toggleTheme = () => {
-    const current = localStorage.getItem(THEME_KEY) || 'dark';
-    const next = current === 'dark' ? 'light' : 'dark';
-    localStorage.setItem(THEME_KEY, next);
-    applyTheme(next);
-  };
-  themeBtn.onclick = toggleTheme;
-
-  // aplica tema salvo ao carregar
-  applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
-}
-
-  // open/close helpers
-  const openMenu = () => {
-    nav.classList.add('open');
-    btn.classList.add('open');
-    btn.innerHTML = '✖';
-    btn.setAttribute('aria-expanded', 'true');
-    document.body.classList.add('menu-open');
-  };
-  const closeMenu = () => {
-    nav.classList.remove('open');
-    btn.classList.remove('open');
-    btn.innerHTML = '☰';
-    btn.setAttribute('aria-expanded', 'false');
-    document.body.classList.remove('menu-open');
-
-    // fechar submenus
-    document.querySelectorAll('.has-sub > .sub-toggle').forEach(t => {
-      t.setAttribute('aria-expanded', 'false');
-      const id = t.getAttribute('aria-controls');
-      const sub = document.getElementById(id);
-      if (sub) sub.hidden = true;
-    });
-  };
-
-  // click handler on burger
-  btn.removeEventListener('click', btn._handler);
-  btn._handler = () => (nav.classList.contains('open') ? closeMenu() : openMenu());
-  btn.addEventListener('click', btn._handler);
-
-  // close when clicking a nav link (preserves SPA intercept)
-  document.body.removeEventListener('click', document.body._navClickHandler);
-  document.body._navClickHandler = (e) => {
-    const a = e.target.closest('a');
-    if (!a) return;
-    if (nav.contains(a)) {
-      // if link has a hash only (in-page) let it, otherwise close menu
-      closeMenu();
-    }
-  };
-  document.body.addEventListener('click', document.body._navClickHandler);
-
-  // close on ESC
-  window.removeEventListener('keydown', window._menuEscHandler);
-  window._menuEscHandler = (e) => {
-    if (e.key === 'Escape' && nav.classList.contains('open')) closeMenu();
-  };
-  window.addEventListener('keydown', window._menuEscHandler);
-
-  // ensure initial state
-  document.querySelectorAll('.has-sub > .sub-toggle').forEach(t => {
-    const sid = t.getAttribute('aria-controls');
-    const sub = document.getElementById(sid);
-    if (sub) sub.hidden = true;
-  });
-}
-
-
-  // --- Toast simples ---------------------------------------------------------
-  function showToast(msg, timeout = 3000) {
-    let el = document.getElementById('globalToast');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'globalToast';
-      Object.assign(el.style, {
-        position: 'fixed',
-        right: '16px',
-        bottom: '16px',
-        background: 'var(--surface)',
-        color: 'var(--text)',
-        padding: '10px 16px',
-        borderRadius: '8px',
-        boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
-        zIndex: 9999,
-        transition: 'opacity 0.4s'
-      });
-      document.body.appendChild(el);
-    }
-    el.textContent = msg;
-    el.style.opacity = '1';
-    setTimeout(() => (el.style.opacity = '0'), timeout);
-  }
-
-  // --- Validação de formulário -----------------------------------------------
-  const formModule = (() => {
-    const KEY = 'ong_avanca_cadastros';
-
-    function initForm() {
-      const form = document.getElementById('cadastroFormFull');
-      if (!form) return;
-
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        if (!validate(form)) return;
-        const data = Object.fromEntries(new FormData(form).entries());
-        data.timestamp = new Date().toISOString();
-        save(data);
-        showToast('Cadastro enviado com sucesso!');
-        form.reset();
-      });
-    }
-
-    function validate(form) {
-      let ok = true;
-      const nome = form.querySelector('#nome');
-      const email = form.querySelector('#email');
-      const interesse = form.querySelector('#interesse');
-
-      form.querySelectorAll('.invalid').forEach(f => f.classList.remove('invalid'));
-
-      if (!nome.value.trim()) {
-        nome.classList.add('invalid');
-        showToast('Informe seu nome');
-        ok = false;
-      }
-      if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email.value)) {
-        email.classList.add('invalid');
-        showToast('E-mail inválido');
-        ok = false;
-      }
-      if (!interesse.value) {
-        interesse.classList.add('invalid');
-        showToast('Selecione um interesse');
-        ok = false;
-      }
-      return ok;
-    }
-
-    function save(data) {
-      const arr = JSON.parse(localStorage.getItem(KEY) || '[]');
-      arr.unshift(data);
-      localStorage.setItem(KEY, JSON.stringify(arr));
-      console.log('Cadastro salvo:', data);
-    }
-
-    return { initForm };
-  })();
-
-  // --- Projetos no index -----------------------------------------------------
-  function renderProjectsPreview() {
-    const grid = document.getElementById('projects-grid');
-    if (!grid) return;
-    const projects = [
-      { title: 'Educação Solidária', img: 'img/library.jpg', desc: 'Apoio pedagógico e cursos profissionalizantes.' },
-      { title: 'Alimentando Esperanças', img: 'img/january-2020.jpg', desc: 'Distribuição de cestas básicas e refeições semanais.' },
-      { title: 'Saúde para Todos', img: 'img/injecting-heart.jpg', desc: 'Atendimentos médicos em comunidades.' }
-    ];
-    const cardTpl = `
-      <article class="project-card">
-        <img src="{{img}}" alt="{{title}}">
-        <h3>{{title}}</h3>
-        <p>{{desc}}</p>
-        <a class="btn btn-outline" href="projetos.html">Saiba mais</a>
-      </article>`;
-    grid.innerHTML = projects.map(p => renderTemplate(cardTpl, p)).join('');
-  }
-
-  // --- Hooks após troca de página --------------------------------------------
-  function initHooks() {
-    ensureMobileMenu();
-    formModule.initForm();
-    theme.init();
-    renderProjectsPreview();
-  }
-
-  // --- Inicialização ---------------------------------------------------------
-  document.addEventListener('DOMContentLoaded', () => {
-    router.interceptLinks();
-    initHooks();
-    history.replaceState({ url: location.pathname }, '', location.pathname);
-  });
 })();
